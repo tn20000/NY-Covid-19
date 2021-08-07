@@ -34,8 +34,8 @@ def predict(W, county):
     county_data = matrify(data[data['County'] == county]['14-day Average Positives'])
     pred = np.array(county_data @ W)[0]
     index = data[data['County'] == county]['Test Date'][28:]
-    plt.plot(index, pred)
-    plt.plot(index, true)
+    plt.plot(index, pred, 'r')
+    plt.plot(index, true, 'g')
     plt.show()
     diff = np.array(true) - pred
     plt.plot(index, diff)
@@ -57,5 +57,5 @@ data = pd.read_csv('processed.csv',
         'Total Number of Tests Performed': 'int',
         'Cumulative Number of Tests Performed': 'int'}, parse_dates=['Test Date'])
 W = lin_reg(data)
-# predict(W, 'New York')
-predict_future(W, 'Albany')
+predict(W, 'New York')
+# predict_future(W, 'Albany')
