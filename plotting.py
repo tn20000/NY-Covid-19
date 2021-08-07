@@ -36,9 +36,11 @@ def predict(W, county):
     index = data[data['County'] == county]['Test Date'][28:]
     plt.plot(index, pred, 'r')
     plt.plot(index, true, 'g')
+    plt.savefig("./diff.png")
     plt.show()
     diff = np.array(true) - pred
     plt.plot(index, diff)
+    plt.savefig("./error.png")
     plt.show()
     error = np.linalg.norm(diff) / len(diff)
     print(error)
