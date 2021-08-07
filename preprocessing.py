@@ -1,6 +1,4 @@
 import pandas as pd
-import matplotlib.pyplot as plt
-import os.path
 
 data = pd.read_csv('New_York_State_Statewide_COVID-19_Testing.csv', 
     dtype={
@@ -18,8 +16,8 @@ for i in range(data.shape[0]):
         data.loc[i, '7-day Average Test Rate'] = sum(test_rates) / 7
     if row['Test Date'] >= pd.to_datetime('2020-03-14'):
         positives = [data.iloc[i - x]['New Positives'] for x in range(7)]
-        data.loc[i, '7-day Average Positives'] = sum(positives) // 14
+        data.loc[i, '14-day Average Positives'] = sum(positives) // 14
         test_rates = [data.iloc[i - x]['Positive Rate'] for x in range(7)]
-        data.loc[i, '7-day Average Test Rate'] = sum(test_rates) / 14
+        data.loc[i, '14-day Average Test Rate'] = sum(test_rates) / 14
 # print(data)
 data.to_csv('processed.csv')
