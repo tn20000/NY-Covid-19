@@ -43,6 +43,13 @@ def predict(W, county):
     error = np.linalg.norm(diff) / len(diff)
     print(error)
 
+def predict_future(W, county):
+    future = list(data[data['County'] == county]['14-day Average Positives'])[-14:]
+    for _ in range(3):
+        future.append(([1] + future[-14:]) @ W)
+    plt.plot(range(3), future[-3:])
+    plt.show()
+
 data = pd.read_csv('processed.csv',
     dtype={
         'New Positives': 'int',
@@ -50,5 +57,5 @@ data = pd.read_csv('processed.csv',
         'Total Number of Tests Performed': 'int',
         'Cumulative Number of Tests Performed': 'int'}, parse_dates=['Test Date'])
 W = lin_reg(data)
-print(W.shape)
-predict(W, 'New York')
+# predict(W, 'New York')
+predict_future(W, 'Albany')
