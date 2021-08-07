@@ -12,15 +12,15 @@ def matrify(county_data):
     X = np.matrix(X)
     return X
 
-def lin_reg(county_data):
+def lin_reg(data):
     X = None
     Y = []
     for _, df in data.groupby('County'):
         if X is None:
-            X = matrify(df['14-day Average Positives'])
+            X = matrify(df['New Positives'])
         else:
-            X = np.append(X, matrify(df['14-day Average Positives']), 0)
-        Y += [y for y in df['14-day Average Positives'][28:]]
+            X = np.append(X, matrify(df['New Positives']), 0)
+        Y += [y for y in df['New Positives'][28:]]
     X = np.array(X)
     Y = np.array(Y)
     # Y = np.matrix(Y)
@@ -29,33 +29,31 @@ def lin_reg(county_data):
     W = linalg.lstsq(X, Y)[0]
     return W
 
-def predict(W, county):
-    true = list(data[data['County'] == county]['14-day Average Positives'])[28:]
-    county_data = matrify(data[data['County'] == county]['14-day Average Positives'])
+def predict(W, county, data):
+    true = list(data[data['County'] == county]['New Positives'])[28:]
+    county_data = matrify(data[data['County'] == county]['New Positives'])
     pred = np.array(county_data @ W)[0]
     index = data[data['County'] == county]['Test Date'][28:]
     plt.plot(index, pred, 'r')
     plt.plot(index, true, 'g')
-    plt.show()
-    diff = np.array(true) - pred
-    plt.plot(index, diff)
-    plt.show()
-    error = np.linalg.norm(diff) / len(diff)
-    print(error)
+    plt.savefig("./diff.png")
+    plt.close()
 
-def predict_future(W, county):
-    future = list(data[data['County'] == county]['14-day Average Positives'])[-14:]
-    for _ in range(3):
+def predict_future(W, county, data):
+    future = list(data[data['County'] == county]['New Positives'])[-14:]
+    for _ in range(7):
         future.append(([1] + future[-14:]) @ W)
-    plt.plot(range(3), future[-3:])
-    plt.show()
+    plt.plot(range(7), future[-7:])
+    plt.savefig("./predict.png")
+    plt.close()
 
-data = pd.read_csv('processed.csv',
-    dtype={
-        'New Positives': 'int',
-        'Cumulative Number of Positives': 'int',
-        'Total Number of Tests Performed': 'int',
-        'Cumulative Number of Tests Performed': 'int'}, parse_dates=['Test Date'])
-W = lin_reg(data)
-predict(W, 'New York')
-# predict_future(W, 'Albany')
+def predi_covid(county):
+    data = pd.read_csv('processed.csv',
+        dtype={
+            'New Positives': 'int',
+            'Cumulative Number of Positives': 'int',
+            'Total Number of Tests Performed': 'int',
+            'Cumulative Number of Tests Performed': 'int'}, parse_dates=['Test Date'])
+    W = lin_reg(data)
+    predict(W, county, data)
+    predict_future(W, county, data)
