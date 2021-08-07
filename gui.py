@@ -1,4 +1,4 @@
-from plotting import predi_covid
+from plotting import get_county, predi_covid
 from kivy.app import App
 from kivy.uix.image import Image
 from kivy.uix.button import Button
@@ -12,7 +12,7 @@ class MainApp(App):
                         size_hint=(.4, .1),
                         pos_hint={'center_x': 0.5, 'center_y': .9})
         self.button.bind(on_press=self.on_press_button)
-        self.sp = Spinner(text='Saratoga', values=['Saratoga','Albany','Rockland'],size_hint=(1,.1),pos_hint={'y':.1})
+        self.sp = Spinner(text='Saratoga', values=get_county(),size_hint=(1,.1),pos_hint={'y':.1})
         self.main_layout = BoxLayout(orientation='vertical',padding=10)
         self.main_layout.add_widget(self.sp)
         self.img = Image(source='NY.png')
