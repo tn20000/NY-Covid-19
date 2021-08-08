@@ -1,7 +1,9 @@
 from load_data import DataGrabber
-from gui import MainApp
 
 grabber = DataGrabber()
 grabber.load_data()
+
+from gui import MainApp
+print('Done')
 app = MainApp()
 app.run()
