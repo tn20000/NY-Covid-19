@@ -23,9 +23,14 @@ class MainApp(App):
     def on_press_button(self, instance):
         predi_covid(self.sp.text)
         self.main_layout.remove_widget(self.img)
-        self.img = Image(source='diff.png')
-        self.img.reload()
-        self.main_layout.add_widget(self.img)
+        self.imgs = BoxLayout(orientation='horizontal')
+        self.diff = Image(source='diff.png')
+        self.diff.reload()
+        self.pred = Image(source='predict.png')
+        self.pred.reload()
+        self.imgs.add_widget(self.diff)
+        self.imgs.add_widget(self.pred)
+        self.main_layout.add_widget(self.imgs)
         self.main_layout.remove_widget(self.button)
         self.button = Button(text='Return', size_hint=(.4,.1), pos_hint={'center_x':0.5,'center_y':0})
         self.button.bind(on_press=self.on_press_button_return)
@@ -33,7 +38,7 @@ class MainApp(App):
     
     def on_press_button_return(self, instance):
         self.main_layout.remove_widget(self.button)
-        self.main_layout.remove_widget(self.img)
+        self.main_layout.remove_widget(self.imgs)
         self.img = Image(source='NY.png')
         self.button = Button(text='predict',
                         size_hint=(.4, .1),
